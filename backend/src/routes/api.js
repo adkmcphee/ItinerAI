@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const { Configuration, OpenAIApi } = require("openai");
-const { addItinerary, addMap, addPoints } = require("../db/queries/helpers");
 const axios = require("axios");
 
 // Set up OpenAI API configuration
@@ -12,7 +11,6 @@ const openai = new OpenAIApi(configuration);
 
 // Handle POST requests to '/api/completions'
 router.post("/completions", async (req, res) => {
-  // console.log(req.body);
   const { city, country, numDays, dailyBudget, interests } = req.body;
 
   const prompt = `Your task is to create a fantastic travel itinerary for your client based on the following information. Your client is planning to visit ${city}, ${country} for ${numDays} days with a daily budget of $${dailyBudget} dollars. They are particularly interested in ${interests}. While the itinerary should cater to the client's interests, it should also introduce them to popular local attractions and landmarks.
@@ -91,27 +89,22 @@ router.post("/completions", async (req, res) => {
       max_tokens: 2500,
     });
 
-    console.log(response.data.choices[0].message.content);
-
     const jsonData = JSON.parse(response.data.choices[0].message.content);
     const itinerary = jsonData.itinerary;
     const accommodation = jsonData.accommodation;
-
-
-    // console.log("jsonData:", jsonData);
-    // console.log("itinerary text:", itinerary);
-    // console.log("itinerary text:", itineraryText);
-    // console.log("key locations:", keyLocations);
-    // console.log("accomodation suggestion:", accommodation);
-    // console.log("restaurants suggestion:", itinerary.restaurants);
     const locationsPerDay = [];
     const itineraryList = [];
 
-
     const config = (title) => {
-      return ({method: "get",
-      url: `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${encodeURI(title)}%20${city}%20${country}&inputtype=textquery&fields=formatted_address%2Cname%2Crating%2Copening_hours%2Cgeometry%2Cphotos&key=${process.env.REACT_APP_NEXT_PUBLIC_MAP_API_KEY}`,
-      headers: {},})
+      return {
+        method: "get",
+        url: `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${encodeURI(
+          title
+        )}%20${city}%20${country}&inputtype=textquery&fields=formatted_address%2Cname%2Crating%2Copening_hours%2Cgeometry%2Cphotos&key=${
+          process.env.REACT_APP_NEXT_PUBLIC_MAP_API_KEY
+        }`,
+        headers: {},
+      };
     };
     const stayData = await axios(config(accommodation.title));
     const stay = stayData.data.candidates[0];
@@ -119,8 +112,8 @@ router.post("/completions", async (req, res) => {
     const savePhoto = await axios({
       method: "get",
       url: `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${city}%20${country}&inputtype=textquery&fields=photos&key=${process.env.REACT_APP_NEXT_PUBLIC_MAP_API_KEY}`,
-      headers: {}
-    })
+      headers: {},
+    });
 
     for (let i = 0; i < itinerary.length; i++) {
       const element = itinerary[i];
@@ -128,8 +121,13 @@ router.post("/completions", async (req, res) => {
       itineraryList.push(element.itinerary_text);
       for (const iterator of element.key_locations) {
         const locationData = await axios(config(iterator.title));
-        if (locationData.data.candidates && locationData.data.candidates[0] && !('photos' in locationData.data.candidates[0])) {
-          locationData.data.candidates[0].photos = savePhoto.data.candidates[0].photos;
+        if (
+          locationData.data.candidates &&
+          locationData.data.candidates[0] &&
+          !("photos" in locationData.data.candidates[0])
+        ) {
+          locationData.data.candidates[0].photos =
+            savePhoto.data.candidates[0].photos;
         }
         if (locationData.data.candidates && locationData.data.candidates[0]) {
           dayLocations.push(locationData.data.candidates[0]);
@@ -137,8 +135,13 @@ router.post("/completions", async (req, res) => {
       }
       for (const iterator of element.restaurants) {
         const locationData = await axios(config(iterator.title));
-        if (locationData.data.candidates && locationData.data.candidates[0] && !('photos' in locationData.data.candidates[0])) {
-          locationData.data.candidates[0].photos = savePhoto.data.candidates[0].photos;
+        if (
+          locationData.data.candidates &&
+          locationData.data.candidates[0] &&
+          !("photos" in locationData.data.candidates[0])
+        ) {
+          locationData.data.candidates[0].photos =
+            savePhoto.data.candidates[0].photos;
         }
         if (locationData.data.candidates && locationData.data.candidates[0]) {
           dayLocations.push(locationData.data.candidates[0]);
@@ -146,12 +149,9 @@ router.post("/completions", async (req, res) => {
       }
       locationsPerDay.push(dayLocations);
     }
-    // console.log('locations for days', locationsPerDay)
 
     //get the photo for saving the itinerary
 
-    
-    console.log(savePhoto);
     const responseData = {
       accommodation,
       city,
@@ -162,13 +162,8 @@ router.post("/completions", async (req, res) => {
       savePhoto: savePhoto.data.candidates[0],
     };
     locationsPerDay.forEach((dayLocations, index) => {
-      console.log(`Day ${index + 1}:`);
-    
-      dayLocations.forEach((location, locationIndex) => {
-        console.log(`Location ${locationIndex + 1}:`, location);
-      });
+      dayLocations.forEach((location, locationIndex) => {});
     });
-    console.log('responseData', responseData);
     res.json(responseData);
   } catch (error) {
     console.error("Error:", error);
