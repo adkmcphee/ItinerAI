@@ -21,7 +21,6 @@ const Login = () => {
 
     try {
       const response = await login(email, password);
-
       setEmail("");
       setPassword("");
     } catch (error) {
@@ -48,15 +47,15 @@ const Login = () => {
           </label>
         </p>
         <p>
-        <label className="login-label">
-          Password:
-          <input
-            className="login-input"
-            type="password"
-            name="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
+          <label className="login-label">
+            Password:
+            <input
+              className="login-input"
+              type="password"
+              name="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
           </label>
         </p>
         <p>

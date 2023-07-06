@@ -1,12 +1,10 @@
-import { useState, useEffect } from "react";
 import "../styles/loading.scss";
-import { TypeAnimation } from 'react-type-animation';
+import { TypeAnimation } from "react-type-animation";
 
 const Loading = () => {
-
   return (
-    <TypeAnimation 
-    sequence={[
+    <TypeAnimation
+      sequence={[
         "Generating your itinerary...",
         2000,
         "Reading your interests...",
@@ -25,7 +23,6 @@ const Loading = () => {
       className="loader"
       repeat={0}
     />
-  )
-
+  );
 };
 export default Loading;

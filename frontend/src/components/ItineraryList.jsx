@@ -11,7 +11,6 @@ const ItineraryList = ({ userId, selectedItinerary, setSelectedItinerary }) => {
   const [itineraries, setItineraries] = useState([]);
   const [loading, setLoading] = useState(true);
 
-
   useEffect(() => {
     setLoading(true);
     axios
@@ -26,7 +25,9 @@ const ItineraryList = ({ userId, selectedItinerary, setSelectedItinerary }) => {
   const handleItineraryClick = (event, itineraryId) => {
     // Open the itinerary if the click is not on the delete button
     if (!event.target.closest(".delete-button")) {
-      const selected = itineraries.find((itinerary) => itinerary.id === itineraryId);
+      const selected = itineraries.find(
+        (itinerary) => itinerary.id === itineraryId
+      );
       const aiData = JSON.parse(selected.response_prompt);
       setSelectedItinerary({ ...selected, aiData });
     }
@@ -66,15 +67,17 @@ const ItineraryList = ({ userId, selectedItinerary, setSelectedItinerary }) => {
       <h1 className="itinerary-header">My Trips</h1>
       {itineraries.length === 0 ? (
         <h2 className="itinerary-empty">
-          It looks like you don't have any saved itineraries! Click <Link to="/">Create
-          Itinerary</Link> to get started!
+          It looks like you don't have any saved itineraries! Click{" "}
+          <Link to="/">Create Itinerary</Link> to get started!
         </h2>
       ) : (
         <ul className="itinerary-list">
           {itineraries.map((itinerary) => (
             <div className="itinerary-item--container" key={itinerary.id}>
               <div className="itinerary-item">
-                <li onClick={(event) => handleItineraryClick(event, itinerary.id)}>
+                <li
+                  onClick={(event) => handleItineraryClick(event, itinerary.id)}
+                >
                   <div className="itinerary-item--photo-container">
                     <img
                       className="itinerary-item--photo"
@@ -100,7 +103,11 @@ const ItineraryList = ({ userId, selectedItinerary, setSelectedItinerary }) => {
         </ul>
       )}
       {selectedItinerary && (
-        <ItineraryListItem aiData={selectedItinerary.aiData} userId={userId} setSelectedItinerary={setSelectedItinerary}/>
+        <ItineraryListItem
+          aiData={selectedItinerary.aiData}
+          userId={userId}
+          setSelectedItinerary={setSelectedItinerary}
+        />
       )}
     </div>
   );

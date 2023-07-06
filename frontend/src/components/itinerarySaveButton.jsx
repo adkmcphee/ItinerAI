@@ -5,35 +5,28 @@ import axios from "axios";
 import "../styles/saveButton.scss";
 import { Checkmark } from "react-checkmark";
 
-
 const ItinerarySaveButton = function ({ aiData, userId }) {
-  console.log("aiData", aiData);
-  console.log("userID", userId);
   const user_id = userId;
   const accommodations = aiData.accommodation.title;
-  const response_prompt = JSON.stringify(aiData)
+  const response_prompt = JSON.stringify(aiData);
   const city = aiData.city;
   const country = aiData.country;
-  const locationsPerDay = aiData.locationsPerDay; 
-  const [isSaved, setIsSaved] = useState(false); 
-
+  const locationsPerDay = aiData.locationsPerDay;
+  const [isSaved, setIsSaved] = useState(false);
   const points = locationsPerDay.flatMap((dayLocations) =>
-  dayLocations.map((location) => ({
-    title: location.name,
-    latitude: location.geometry.location.lat,
-    longitude: location.geometry.location.lng,
-    description: location.formatted_address,
-    image_url: location.photos[0].photo_reference,
-    rating: location.rating,
-  }))
-);
+    dayLocations.map((location) => ({
+      title: location.name,
+      latitude: location.geometry.location.lat,
+      longitude: location.geometry.location.lng,
+      description: location.formatted_address,
+      image_url: location.photos[0].photo_reference,
+      rating: location.rating,
+    }))
+  );
 
   const handleSave = (event) => {
-    console.log("trying to make your post...");
     event.preventDefault();
-
     const imageUrl = aiData.savePhoto.photos[0].photo_reference;
-    
 
     axios
       .post("http://localhost:8080/itineraries", {
@@ -61,9 +54,7 @@ const ItinerarySaveButton = function ({ aiData, userId }) {
         </>
       ) : (
         <form onSubmit={handleSave}>
-          <label>
-            Like this itinerary? Click the heart to save it:
-          </label>
+          <label>Like this itinerary? Click the heart to save it:</label>
           <button type="submit">
             <FontAwesomeIcon icon={faHeart} style={{ color: "red" }} />
           </button>

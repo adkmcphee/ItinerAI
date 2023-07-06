@@ -15,21 +15,13 @@ const ItineraryListItem = (props) => {
   const [activeMarker, setActiveMarker] = useState(null);
   const [day, setDay] = useState(0);
   const [isOpen, setIsOpen] = useState(true);
-  const {user} = useContext(AuthContext);
-
-  console.log("userID2", props.userId);
-
+  const { user } = useContext(AuthContext);
   const { itineraryList, locationsPerDay, city, country } = props.aiData;
   const accommodation = props.aiData.stay;
 
-  console.log(
-    "all locations",
-    props.aiData.savePhoto.photos[0].photo_reference
-  );
-
   useEffect(() => {
-    setDay(0)
-  }, [props.aiData])
+    setDay(0);
+  }, [props.aiData]);
 
   const handleActiveMarker = (marker) => {
     if (marker === activeMarker) {
@@ -41,11 +33,9 @@ const ItineraryListItem = (props) => {
   // get the api key for the map
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_NEXT_PUBLIC_MAP_API_KEY,
-
   });
 
   // setting up the locationsPerDay for the map
-
   const activities = locationsPerDay[day].map((position, index) => {
     return (
       <MarkerF
@@ -92,40 +82,31 @@ const ItineraryListItem = (props) => {
     );
   });
 
-  const onLoad = useCallback(
-    (map) => {
-      const bounds = new window.google.maps.LatLngBounds(
-        accommodation.geometry.location
-      );
-      for (let i = 0; i < locationsPerDay[day].length; i++) {
-        const element = locationsPerDay[day][i].geometry.location;
-        const newCoord = new window.google.maps.LatLng(
-          element.lat,
-          element.lng
-        );
-        bounds.extend(newCoord);
-      }
-      map.fitBounds(bounds);
-      setMap(map);
-    },
-    []
-  );
+  const onLoad = useCallback((map) => {
+    const bounds = new window.google.maps.LatLngBounds(
+      accommodation.geometry.location
+    );
+    for (let i = 0; i < locationsPerDay[day].length; i++) {
+      const element = locationsPerDay[day][i].geometry.location;
+      const newCoord = new window.google.maps.LatLng(element.lat, element.lng);
+      bounds.extend(newCoord);
+    }
+    map.fitBounds(bounds);
+    setMap(map);
+  }, []);
 
   useEffect(() => {
     // define a function that calculates the new bounds based on props.aiData
-      const bounds = new window.google.maps.LatLngBounds(
-        accommodation.geometry.location
-      );
-      for (let i = 0; i < locationsPerDay[day].length; i++) {
-        const element = locationsPerDay[day][i].geometry.location;
-        const newCoord = new window.google.maps.LatLng(
-          element.lat,
-          element.lng
-        );
-        bounds.extend(newCoord);
-      }
-      // fit the map to the new bounds
-      map && map.fitBounds(bounds);
+    const bounds = new window.google.maps.LatLngBounds(
+      accommodation.geometry.location
+    );
+    for (let i = 0; i < locationsPerDay[day].length; i++) {
+      const element = locationsPerDay[day][i].geometry.location;
+      const newCoord = new window.google.maps.LatLng(element.lat, element.lng);
+      bounds.extend(newCoord);
+    }
+    // fit the map to the new bounds
+    map && map.fitBounds(bounds);
   }, [props.aiData, day]);
 
   const onUnmount = useCallback(function callback(map) {
@@ -147,7 +128,15 @@ const ItineraryListItem = (props) => {
         X
       </button>
       <div className="itineray-list--item-header">
-        {user ? <h1>{user.first_name}'s Trip to {city}, {country}{" "}</h1> : <h1>My Trip to {city}, {country}{" "}</h1>}
+        {user ? (
+          <h1>
+            {user.first_name}'s Trip to {city}, {country}{" "}
+          </h1>
+        ) : (
+          <h1>
+            My Trip to {city}, {country}{" "}
+          </h1>
+        )}
         <div className="accommodation">
           <h4>Accommodation: </h4>
           <h3>{accommodation.name}</h3>

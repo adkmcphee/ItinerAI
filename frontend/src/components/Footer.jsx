@@ -3,9 +3,9 @@ import "../styles/Footer.scss";
 
 const Footer = () => {
   const teamItinerai = [
-    {name: 'Adam McPhee', github: 'https://github.com/adkmcphee'},
-    {name: 'Hooman Asadian', github: 'https://github.com/hoomili'},
-    {name: 'Kamila Lemaire', github: 'https://github.com/klemaire23'}
+    { name: "Adam McPhee", github: "https://github.com/adkmcphee" },
+    { name: "Hooman Asadian", github: "https://github.com/hoomili" },
+    { name: "Kamila Lemaire", github: "https://github.com/klemaire23" },
   ];
 
   const mappedTeamItinerai = teamItinerai.map((member, index) => {
@@ -27,6 +27,5 @@ const Footer = () => {
     </footer>
   );
 };
-
 
 export default Footer;

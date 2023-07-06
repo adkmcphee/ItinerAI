@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../styles/Homepage.scss";
 import { ColorRing } from "react-loader-spinner";
-import Autocomplete from 'react-google-autocomplete';
+import Autocomplete from "react-google-autocomplete";
 import Loading from "./Loading";
 
 function Homepage(props) {
@@ -12,13 +12,7 @@ function Homepage(props) {
   const [dailyBudget, setDailyBudget] = useState("");
   const [interests, setInterests] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(false); // Track completion status
-
-  // useEffect(() => {
-  //   if (props.aiData.length > 0) {
-  //     setIsCompleted(true); // Set completion status to true if aiData is available
-  //   }
-  // }, [props.aiData]);
+  const [isCompleted, setIsCompleted] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -35,8 +29,6 @@ function Homepage(props) {
         interests,
       })
       .then((response) => {
-        console.log("API response:", response);
-        console.log("API response data:", response.data);
         props.setAiData(response.data);
         setIsGenerating(false);
         setIsCompleted(true);
@@ -47,8 +39,12 @@ function Homepage(props) {
   };
 
   return (
-    <div className={`homepage-container ${isCompleted ? "homepage-container-completed" : ""}`}>
-    {isCompleted ? (
+    <div
+      className={`homepage-container ${
+        isCompleted ? "homepage-container-completed" : ""
+      }`}
+    >
+      {isCompleted ? (
         <>
           <h1 className="homepage-title">Itinerary Generated!</h1>
           <button
@@ -83,23 +79,23 @@ function Homepage(props) {
         <>
           <h1 className="homepage-title">Tell us about your upcoming trip!</h1>
           <form onSubmit={handleSubmit} className="homepage-form">
-
             <label className="homepage-label">
               Destination:
-              <Autocomplete 
-              apiKey={process.env.REACT_APP_NEXT_PUBLIC_MAP_API_KEY}
-              // placeholder="Enter a city"
-              className="homepage-input"
-              onPlaceSelected={(place) => {
-                console.log(place.address_components);
-                console.log('last item',place.address_components[place.address_components.length - 1]);
-                setCity(place.address_components[0].long_name);
-                setCountry(place.address_components[place.address_components.length - 1].long_name);
-              }}
-              options={{
-                types: ["(cities)"],
-              }}
-            />
+              <Autocomplete
+                apiKey={process.env.REACT_APP_NEXT_PUBLIC_MAP_API_KEY}
+                className="homepage-input"
+                onPlaceSelected={(place) => {
+                  setCity(place.address_components[0].long_name);
+                  setCountry(
+                    place.address_components[
+                      place.address_components.length - 1
+                    ].long_name
+                  );
+                }}
+                options={{
+                  types: ["(cities)"],
+                }}
+              />
             </label>
             <label className="homepage-label">
               Number of days:

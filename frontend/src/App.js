@@ -11,16 +11,11 @@ import Homepage from "./components/Homepage";
 import ItineraryList from "./components/ItineraryList";
 import ItineraryListItem from "./components/itinerarylistitem";
 
-
 function App() {
   const [aiData, setAiData] = useState(null);
-
   const { isLoggedIn, user } = useContext(AuthContext);
   const [userId, setUserId] = useState(null);
   const [selectedItinerary, setSelectedItinerary] = useState(null);
-  
-  console.log('user', user);
-
 
   useEffect(() => {
     if (user) {
@@ -35,21 +30,41 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<RegisterNewUser />} />
-          <Route path="/my-itineraries" element={user && <ItineraryList userId={userId} selectedItinerary={selectedItinerary} setSelectedItinerary={setSelectedItinerary} />} />
-          <Route path="/itinerary/:userId/:id" element={<ItineraryListItem aiData={aiData} userId={userId}/>} />
+          <Route
+            path="/my-itineraries"
+            element={
+              user && (
+                <ItineraryList
+                  userId={userId}
+                  selectedItinerary={selectedItinerary}
+                  setSelectedItinerary={setSelectedItinerary}
+                />
+              )
+            }
+          />
+          <Route
+            path="/itinerary/:userId/:id"
+            element={<ItineraryListItem aiData={aiData} userId={userId} />}
+          />
           <Route
             exact
             path="/"
             element={
               <>
                 <Homepage setAiData={setAiData} />
-                {aiData && <ItineraryListItem aiData={aiData} userId={userId} setSelectedItinerary={setSelectedItinerary}/>}
+                {aiData && (
+                  <ItineraryListItem
+                    aiData={aiData}
+                    userId={userId}
+                    setSelectedItinerary={setSelectedItinerary}
+                  />
+                )}
               </>
             }
           />
         </Routes>
       </div>
-        <Footer />
+      <Footer />
     </Router>
   );
 }
