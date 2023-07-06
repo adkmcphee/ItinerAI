@@ -28,14 +28,6 @@ const RegisterNewUser = () => {
 
     try {
       const profilePicUrl = profilePic || defaultProfilePic;
-      const response = await axios.post("http://localhost:8080/register", {
-        firstName,
-        lastName,
-        email,
-        profilePic: profilePicUrl,
-        password,
-      });
-
       setRegistrationSuccess(true);
 
       const loginResponse = await login(email, password);

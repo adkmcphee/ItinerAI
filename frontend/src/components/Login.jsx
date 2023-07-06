@@ -20,7 +20,6 @@ const Login = () => {
     event.preventDefault();
 
     try {
-      const response = await login(email, password);
       setEmail("");
       setPassword("");
     } catch (error) {

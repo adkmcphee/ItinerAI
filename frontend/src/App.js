@@ -13,7 +13,7 @@ import ItineraryListItem from "./components/itinerarylistitem";
 
 function App() {
   const [aiData, setAiData] = useState(null);
-  const { isLoggedIn, user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [userId, setUserId] = useState(null);
   const [selectedItinerary, setSelectedItinerary] = useState(null);
 
